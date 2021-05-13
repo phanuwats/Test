@@ -6,6 +6,8 @@ namespace Test.Services
     public class ServiceBase
     {
         protected string con;
+        protected bool isSuccessLog = false;
+        protected bool isFailLog = false;
 
         public ServiceBase()
         {
@@ -15,6 +17,9 @@ namespace Test.Services
               .Build();
 
             this.con = configuration["ConnectionString:DefaultConnection"];
+
+            this.isSuccessLog = (configuration["DBLog:LogSuccess"] == "1" );
+            this.isFailLog = (configuration["DBLog:LogFail"] == "1");
         }
     }
 }
