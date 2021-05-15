@@ -36,7 +36,7 @@ namespace Test.Services
             }
         }
 
-        public void AddTransaction(List<TransactionModel> source)
+        public void AddTransaction(string impLogID, List<TransactionModel> source)
         {
             if (source.Count > 0)
                 using (var c = new SqlConnection(this.con))
@@ -44,6 +44,7 @@ namespace Test.Services
                     for (int i = 0; i < source.Count; i++)
                     {
                         var p = new DynamicParameters();
+                        p.Add("@IMP_LOG_ID", impLogID);
                         p.Add("@TRN_NO", source[i].trnID);
                         p.Add("@AMOUNT", source[i].amount);
                         p.Add("@CUR_CODE", source[i].currencyCode);

@@ -20,7 +20,7 @@ namespace Test.Services
         }
 
 
-        public void AddImportLog(string fileName, string errorMessage, string status, string createBy)
+        public string AddImportLog(string fileName, string errorMessage, string status, string createBy)
         {
             if ((status == "1" && this.isSuccessLog) || (status == "0" && this.isFailLog))
             using (var c = new SqlConnection(this.con))
@@ -31,9 +31,11 @@ namespace Test.Services
                 p.Add("@STATUS", status);
                 p.Add("@CREATE_BY", createBy);
 
-                c.Execute("SP_LOG_IMPORT_INSERT", p,
+                return c.ExecuteScalar("SP_LOG_IMPORT_INSERT", p,
                     commandType: System.Data.CommandType.StoredProcedure, commandTimeout: 60).ToString();
             }
+
+            return "-1";
         }
 
     }

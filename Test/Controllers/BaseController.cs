@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -12,23 +11,6 @@ namespace Test.Controllers
 {
     public class BaseController : Controller
     {
-
-        public Dictionary<string, string> xmlStatus = new Dictionary<string, string>();
-        public Dictionary<string, string> csvStatus = new Dictionary<string, string>();
-
-        public BaseController()
-        {
-            //Load the valid transaction tatus
-            MasterService svc = new MasterService();
-            List<dynamic> modStatus = svc.GetLookup("CSV");
-            for (int i = 0; i < modStatus.Count; i++) csvStatus.Add(modStatus[i].LOOKUP_NAME.ToUpper(), modStatus[i].LOOKUP_CODE);
-
-            modStatus = svc.GetLookup("XML");
-            for (int i = 0; i < modStatus.Count; i++) xmlStatus.Add(modStatus[i].LOOKUP_NAME.ToUpper(), modStatus[i].LOOKUP_CODE);
-        }
-
-
-
         #region Import File Helper
         public int LimitFileSize
         {

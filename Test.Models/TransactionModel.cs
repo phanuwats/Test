@@ -12,7 +12,7 @@ namespace Test.Models
         public string trnDate { get; set; }
         public string status { get; set; }
 
-        public bool isError { get; set; }
-        public string errorMessage { get; set; }
+        //public bool isError { get; set; }
+        //public string errorMessage { get; set; }
     }
 }
