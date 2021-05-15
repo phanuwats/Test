@@ -36,21 +36,25 @@ namespace Test.Services
             }
         }
 
-        public void AddTransaction(string trnNo, string amount, string currencyCode, string trnDate, string status, string createBy)
+        public void AddTransaction(List<TransactionModel> source)
         {
-            using (var c = new SqlConnection(this.con))
-            {
-                var p = new DynamicParameters();
-                p.Add("@TRN_NO", trnNo);
-                p.Add("@AMOUNT", amount);
-                p.Add("@CUR_CODE", currencyCode);
-                p.Add("@TRN_DATE", trnDate);
-                p.Add("@STATUS", status);
-                p.Add("@CREATE_BY", createBy);
+            if (source.Count > 0)
+                using (var c = new SqlConnection(this.con))
+                {
+                    for (int i = 0; i < source.Count; i++)
+                    {
+                        var p = new DynamicParameters();
+                        p.Add("@TRN_NO", source[i].trnID);
+                        p.Add("@AMOUNT", source[i].amount);
+                        p.Add("@CUR_CODE", source[i].currencyCode);
+                        p.Add("@TRN_DATE", source[i].trnDate);
+                        p.Add("@STATUS", source[i].status);
+                        p.Add("@CREATE_BY", "System");
 
-                c.Execute("SP_TRN_TRANSACTION_INSERT", p,
-                    commandType: System.Data.CommandType.StoredProcedure, commandTimeout: 60).ToString();
-            }
+                        c.Execute("SP_TRN_TRANSACTION_INSERT", p,
+                            commandType: System.Data.CommandType.StoredProcedure, commandTimeout: 60).ToString();
+                    }
+                }
         }
 
 

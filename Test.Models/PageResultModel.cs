@@ -6,7 +6,7 @@ namespace Test.Models
 {
     public class PageResultModel
     {
-        public string errorCode { get; set; }
-        public string errorMessage { get; set; }
+        public string statusCode { get; set; }
+        public string statusMessage { get; set; }
     }
 }

@@ -1,8 +1,37 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+@model Test.Models.PageResultModel
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+
+<form id="frmImport" method="post" enctype="multipart/form-data" asp-action="ImportFile" asp-controller="Home">
+    @Html.AntiForgeryToken()
+    <div class="text-center">
+        <h3>Select File (xml, csv) <small>(Limit 1 mb.) </small></h3>
+
+        <div class="mt-4 mb-5">
+            <input type="file" id="fiImport" name="file" accept=".xml,.csv" required />
+        </div>
+      
+        @if (Model != null)
+            @if (Model.statusCode == "200")
+            {
+                <h5 class="text-success">Status : @Model.statusCode  @Model.statusMessage</h5>
+            }
+            else
+            {
+                <h5 class="text-danger">Status : @Model.statusCode  @Model.statusMessage</h5>
+            }
+    </div>
+</form>
+
+@section Scripts{
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#fiImport").change(function () {
+            $("#frmImport").submit();
+        });
+    });
+</script>
+}
+
