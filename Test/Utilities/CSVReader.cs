@@ -88,39 +88,42 @@ namespace Test
                 string[] lines = content.Split('\n', StringSplitOptions.RemoveEmptyEntries);
                 for (int i = 0; i < lines.Length; i++)
                 {
-                    string[] fields = lines[i].Trim().Split(new string[] { "\",\"" }, StringSplitOptions.RemoveEmptyEntries);
-                    string rowError = "";
-                    if (fields.Length == 5)
+                    if (lines[i].Trim().Length > 0)
                     {
-                        string trnID, amount, curCode, trnDate, status;
-                        string fieldErr;
+                        string[] fields = lines[i].Trim().Split(new string[] { "\",\"" }, StringSplitOptions.RemoveEmptyEntries);
+                        string rowError = "";
+                        if (fields.Length == 5)
+                        {
+                            string trnID, amount, curCode, trnDate, status;
+                            string fieldErr;
 
-                        trnID = ValidateTransactionID(fields[0], out fieldErr);
-                        if (fieldErr.Length > 0) rowError = fieldErr;
+                            trnID = ValidateTransactionID(fields[0], out fieldErr);
+                            if (fieldErr.Length > 0) rowError = fieldErr;
 
-                        amount = ValidateAmount(fields[1], out fieldErr);
-                        if (fieldErr.Length > 0) rowError += fieldErr;
+                            amount = ValidateAmount(fields[1], out fieldErr);
+                            if (fieldErr.Length > 0) rowError += fieldErr;
 
-                        curCode = ValidateCurrencyCode(fields[2], out fieldErr);
-                        if (fieldErr.Length > 0) rowError += fieldErr;
+                            curCode = ValidateCurrencyCode(fields[2], out fieldErr);
+                            if (fieldErr.Length > 0) rowError += fieldErr;
 
-                        trnDate = ValidateTransactionDate(fields[3], out fieldErr);
-                        if (fieldErr.Length > 0) rowError += fieldErr;
+                            trnDate = ValidateTransactionDate(fields[3], out fieldErr);
+                            if (fieldErr.Length > 0) rowError += fieldErr;
 
-                        status = ValidateStatus(fields[4], out fieldErr);
-                        if (fieldErr.Length > 0) rowError += fieldErr;
+                            status = ValidateStatus(fields[4], out fieldErr);
+                            if (fieldErr.Length > 0) rowError += fieldErr;
 
-                        if (rowError.Length == 0)
-                            mod.Add(new TransactionModel()
-                            { trnID = trnID, amount = amount, currencyCode = curCode, trnDate = trnDate, status = status });
+                            if (rowError.Length == 0)
+                                mod.Add(new TransactionModel()
+                                { trnID = trnID, amount = amount, currencyCode = curCode, trnDate = trnDate, status = status });
+                        }
+                        else
+                        {
+                            rowError = "Invalid format.";
+                        }
+
+                        if (rowError.Length > 0)
+                            sbErr.Append("Item no " + (i + 1).ToString() +" "+ rowError + "\n");
                     }
-                    else
-                    {
-                        rowError = "Invalid format.";
-                    }
-
-                    if (rowError.Length > 0)
-                        sbErr.Append("Item no " + (i + 1).ToString() + rowError + "\n");
                 }
             }
             else

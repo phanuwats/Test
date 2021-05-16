@@ -86,50 +86,57 @@ namespace Test
 
             if (content.Trim().Length > 0)
             {
-                XDocument xml = XDocument.Parse(content.ToLower());
-
-                int i = 1;
-                foreach (var node in xml.Descendants("transaction"))
+                try
                 {
-                    string rowError = "";
-                    try
+                    XDocument xml = XDocument.Parse(content.ToLower());
+
+                    int i = 1;
+                    foreach (var node in xml.Descendants("transaction"))
                     {
-                        string trnID, amount, curCode, trnDate, status;
-                        string fieldErr;
+                        string rowError = "";
+                        try
+                        {
+                            string trnID, amount, curCode, trnDate, status;
+                            string fieldErr;
 
-                        trnID = node.Attribute("id").Value;
-                        trnDate = node.Element("transactiondate").Value.ToUpper();
-                        amount = node.Element("paymentdetails").Element("amount").Value;
-                        curCode = node.Element("paymentdetails").Element("currencycode").Value;
-                        status = node.Element("status").Value;
+                            trnID = node.Attribute("id").Value;
+                            trnDate = node.Element("transactiondate").Value.ToUpper();
+                            amount = node.Element("paymentdetails").Element("amount").Value;
+                            curCode = node.Element("paymentdetails").Element("currencycode").Value;
+                            status = node.Element("status").Value;
 
-                        trnID = ValidateTransactionID(trnID, out fieldErr);
-                        if (fieldErr.Length > 0) rowError = fieldErr;
+                            trnID = ValidateTransactionID(trnID, out fieldErr);
+                            if (fieldErr.Length > 0) rowError = fieldErr;
 
-                        amount = ValidateAmount(amount, out fieldErr);
-                        if (fieldErr.Length > 0) rowError += fieldErr;
+                            amount = ValidateAmount(amount, out fieldErr);
+                            if (fieldErr.Length > 0) rowError += fieldErr;
 
-                        curCode = ValidateCurrencyCode(curCode, out fieldErr);
-                        if (fieldErr.Length > 0) rowError += fieldErr;
+                            curCode = ValidateCurrencyCode(curCode, out fieldErr);
+                            if (fieldErr.Length > 0) rowError += fieldErr;
 
-                        trnDate = ValidateTransactionDate(trnDate, out fieldErr);
-                        if (fieldErr.Length > 0) rowError += fieldErr;
+                            trnDate = ValidateTransactionDate(trnDate, out fieldErr);
+                            if (fieldErr.Length > 0) rowError += fieldErr;
 
-                        status = ValidateStatus(status, out fieldErr);
-                        if (fieldErr.Length > 0) rowError += fieldErr;
+                            status = ValidateStatus(status, out fieldErr);
+                            if (fieldErr.Length > 0) rowError += fieldErr;
 
-                        if (rowError.Length == 0)
-                            mod.Add(new TransactionModel()
-                            { trnID = trnID, amount = amount, currencyCode = curCode, trnDate = trnDate, status = status });
+                            if (rowError.Length == 0)
+                                mod.Add(new TransactionModel()
+                                { trnID = trnID, amount = amount, currencyCode = curCode, trnDate = trnDate, status = status });
+                        }
+                        catch
+                        {
+                            rowError = "Invalid format.";
+                        }
+                        if (rowError.Length > 0)
+                            sbErr.Append("Item no " + i.ToString() + " " + rowError + "\n");
+
+                        i++;
                     }
-                    catch
-                    {
-                        rowError = "Invalid format.";
-                    }
-                    if (rowError.Length > 0)
-                        sbErr.Append("Item no " + i.ToString() + rowError + "\n");
-
-                    i++;
+                }
+                catch
+                {
+                    sbErr.Append("Invalid xml format.");
                 }
             }
             else

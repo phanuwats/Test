@@ -10,6 +10,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.Models", "Test.Models\Test.Models.csproj", "{78D615BC-4B6D-4112-BEE9-91C1F7B7F2A9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQLScripts", "SQLScripts", "{82157865-AE5C-417C-B234-34311AC104D3}"
+	ProjectSection(SolutionItems) = preProject
+		1_create_structure.sql = 1_create_structure.sql
+		2_initial_data.sql = 2_initial_data.sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
